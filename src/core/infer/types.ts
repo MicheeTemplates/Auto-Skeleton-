@@ -13,7 +13,7 @@ export interface SkeletonBlock extends SkeletonBase {
     kind: "block";
 }
 
-export interface SkeletonGroup {
+export interface SkeletonGroup extends SkeletonBase {
     kind: "group";
     direction: "row" | "column";
     gap: number;

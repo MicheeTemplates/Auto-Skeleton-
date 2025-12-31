@@ -1,4 +1,4 @@
-import { ProbeResult } from "./probe";
+import { ProbeResult } from "./probe.js";
 
 export type NodeType = "text" | "block" | "group";
 

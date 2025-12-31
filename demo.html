@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AutoSkeleton Demo</title>
+    <style>
+        body { font-family: sans-serif; padding: 20px; }
+        .card {
+            border: 1px solid #ccc;
+            padding: 20px;
+            border-radius: 12px;
+            width: 300px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+        .avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background-color: #333;
+        }
+        .title h2 { margin: 0; font-size: 18px; }
+        .title p { margin: 4px 0 0; color: #666; font-size: 14px; }
+        .content {
+            font-size: 16px;
+            line-height: 1.5;
+            color: #444;
+        }
+    </style>
+</head>
+<body>
+
+    <div style="display: flex; gap: 50px;">
+        <!-- The Real Component -->
+        <div>
+            <h3>Original</h3>
+            <div id="target" class="card">
+                <div class="header">
+                    <img class="avatar" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'/%3E" />
+                    <div class="title">
+                        <h2>User Name</h2>
+                        <p>Software Engineer</p>
+                    </div>
+                </div>
+                <div class="content">
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore.
+                </div>
+            </div>
+        </div>
+
+        <!-- The Resulting Skeleton -->
+        <div>
+            <h3>Generated Skeleton</h3>
+            <div id="output"></div>
+        </div>
+    </div>
+
+    <!-- We must compile TS to JS to run this, or use a bundler. 
+         For this demo, we can just use the compiled output if we run `npx tsc` 
+         but for now I'll inline a minimal script that uses ES modules if served 
+         or just manually verify via console if I can run the node script.
+         
+         Actually, let's use the code we generated.
+         I will assume we can bundle or I will paste the logic here for the 'Manual Demo' verification 
+         if the user opens this file.
+    -->
+    <script type="module">
+        import { inferNode } from './dist/core/infer/inferNode.js';
+        import { renderSkeleton } from './dist/core/render/renderSkeleton.js';
+
+        // Wait for styles to apply
+        window.addEventListener('load', () => {
+            const target = document.getElementById('target');
+            const output = document.getElementById('output');
+
+            const skeletonTree = inferNode(target);
+            console.log("Inferred Tree:", skeletonTree);
+
+            const skeletonDOM = renderSkeleton(skeletonTree);
+            output.appendChild(skeletonDOM);
+        });
+    </script>
+</body>
+</html>

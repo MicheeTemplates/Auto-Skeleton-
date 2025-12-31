@@ -5,6 +5,7 @@
     "lib": ["DOM", "ES2020"],
     "strict": true,
     "moduleResolution": "node",
+    "skipLibCheck": true,
     "outDir": "./dist",
     "rootDir": "./src"
   },
