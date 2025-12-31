@@ -5,7 +5,6 @@ export interface SkeletonBase {
     padding?: string;
     margin?: string;
     border?: string;
-    hint?: string; // Tailwind classes from data-skeleton attribute
 }
 
 export interface SkeletonText extends SkeletonBase {

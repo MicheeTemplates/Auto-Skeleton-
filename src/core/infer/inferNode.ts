@@ -6,13 +6,7 @@ export function inferNode(el: HTMLElement): SkeletonNode | null {
   const probeData = probe(el);
   console.log("probed data: ", probeData);
 
-  // Handle skip type - don't generate skeleton for this element
-  if (probeData.skeletonType === 'skip' || probeData.skeletonHint === 'skip') {
-    return null;
-  }
-
-  // Allow type override from data-skeleton-type
-  const type = probeData.skeletonType || classify(el, probeData);
+  const type = classify(el, probeData);
 
   if (type === "text") {
     // Accurately calculate line height from computed styles
@@ -21,8 +15,8 @@ export function inferNode(el: HTMLElement): SkeletonNode | null {
 
     let lineHeight: number;
     if (lineHeightStr === 'normal') {
-      // Browser default is typically 1.1
-      lineHeight = fontSize * 0.9;
+      // Browser default is typically 1.2
+      lineHeight = fontSize * 1.2;
     } else if (lineHeightStr.endsWith('px')) {
       // Explicit pixel value like "24px"
       lineHeight = parseFloat(lineHeightStr);
@@ -31,8 +25,13 @@ export function inferNode(el: HTMLElement): SkeletonNode | null {
       lineHeight = parseFloat(lineHeightStr) * fontSize;
     }
 
-    // Calculate number of lines based on total height
-    const lines = Math.max(1, Math.round(probeData.height / lineHeight));
+    // "Single element should not be represented as multiple lines except it has a line height css property"
+    // If line-height is 'normal', force lines = 1.
+    // Otherwise calculate based on height.
+    let lines = 1;
+    if (lineHeightStr !== 'normal') {
+      lines = Math.max(1, Math.round(probeData.height / lineHeight));
+    }
 
     return {
       kind: "text",
@@ -42,8 +41,7 @@ export function inferNode(el: HTMLElement): SkeletonNode | null {
       radius: parseFloat(probeData.borderRadius) || 4, // Default radius for text
       padding: probeData.styles.padding,
       margin: probeData.styles.margin,
-      border: probeData.styles.border,
-      hint: probeData.skeletonHint
+      border: probeData.styles.border
     };
   }
 
@@ -70,7 +68,6 @@ export function inferNode(el: HTMLElement): SkeletonNode | null {
       padding: probeData.styles.padding,
       margin: probeData.styles.margin,
       border: probeData.styles.border,
-      hint: probeData.skeletonHint,
       // Flex/Grid layout properties
       justifyContent: probeData.justifyContent,
       alignItems: probeData.alignItems,
@@ -88,7 +85,6 @@ export function inferNode(el: HTMLElement): SkeletonNode | null {
     radius: parseFloat(probeData.borderRadius),
     padding: probeData.styles.padding,
     margin: probeData.styles.margin,
-    border: probeData.styles.border,
-    hint: probeData.skeletonHint
+    border: probeData.styles.border
   };
 }
