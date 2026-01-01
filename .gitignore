@@ -11,3 +11,6 @@ coverage/
 # Misc
 .DS_Store
 *.log
+
+# Secrets
+.npmrc
